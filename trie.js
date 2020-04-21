@@ -14,16 +14,37 @@ function Trie() {
   }
 
   this.print = (node = this.root) => {
-    if (node !== this.root) process.stdout.write(node.char)
+    process.stdout.write(node.char)
+    if (node.isEnd)
+      process.stdout.write('.\n')
+    else if(node.children.length > 1 && node.isEnd)
+      process.stdout.write('\n →')
     for (const child of node.children) {
-      if (node.children.length > 1)
-        process.stdout.write('\n →')
-      if (node.isEnd)
-        process.stdout.write('\n ')
+      // if (node.children.length > 1)
+      //   process.stdout.write('\n →')
+      // if (node.isEnd)
+      //   process.stdout.write('\n ')
       this.print(child)
     }
-    if (!node.children.length)
-      process.stdout.write('\n ')
+  }
+
+  const subtreeCount = node => {
+    if (!node.children.length) return 1
+    let s = +node.isEnd
+    for (const child of node.children) {
+      s += subtreeCount(child)
+    }
+    return s
+  }
+
+  this.startsWithCount = sub => {
+    let node = this.root
+    for (const c of sub) {
+      const child = getChild(c, node)
+      if(!child) return 0
+      node = child
+    }
+    return subtreeCount(node)
   }
 
   this.insert = word => {
@@ -55,8 +76,11 @@ tree.insert('there')
 tree.insert('thererere')
 tree.insert('their')
 tree.insert('the')
+tree.insert('theatre')
+tree.insert('threat')
 tree.insert('currrnt')
 tree.insert('currrent')
 tree.insert('curry')
 // console.log(tree.search('the'))
 tree.print()
+console.log(tree.startsWithCount('th'))
