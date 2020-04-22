@@ -55,7 +55,7 @@ function dijkstra(s) {
   console.log('Initial heap:', h.array)
   while (h.array.length > 0) {
     const { vtx: v } = h.root()
-    h.delete(0)
+    h.deleteAt(0)
     console.log('Partial heap:', h.array)
     for (const edge in g.edges(v)) {
       const [, u] = edge.split(',')

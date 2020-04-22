@@ -51,9 +51,14 @@ function Heap(key, mode = 'min') {
   }
 
   const _bubbleDown = s => {
-    const anyChildrenMatches = [_lChild(s), _rChild(s)]
-      .filter(c => c && _eval(s, c, mode === 'min' ? 'max': 'min'))
-    if (!anyChildrenMatches.length || _isLeaf(s)) return
+    // const anyChildrenMatches = [_lChild(s), _rChild(s)]
+    //   .filter(c => c && _eval(s, c, mode === 'min' ? 'max': 'min'))
+    const m = mode === 'min' ? 'max': 'min'
+    if (
+      _isLeaf(s) ||
+      (!_eval(s, _lChild(s), m) && !_eval(s, _rChild(s), m))
+    )
+      return
     const swapIdx = _next(s)
     if (!_valueAt(swapIdx)) return
     _swap(s, swapIdx) // array[s] = new array[swapIdx]
@@ -94,7 +99,7 @@ function Heap(key, mode = 'min') {
       this.array.pop()
       return
     }
-    const swap = _swappingTarget(idx)
+    const swap = this.array.length - 1 //_swappingTarget(idx)
     _swap(idx, swap)
     this.array.splice(swap, 1)
     _bubbleDown(idx)
@@ -106,9 +111,54 @@ function Heap(key, mode = 'min') {
       this.insert(n)
     }
   }
+
+  this.sort = () => {
+    const sorted = []
+    while (this.array.length > 0) {
+      sorted.push(this.root())
+      this.deleteAt(0)
+    }
+    return sorted
+  }
 }
 
-// const h = new Heap()
+function distinguish(orderList) {
+  const result = {
+      prime: [],
+      nonprime: []
+  };
+  for (const o of orderList) {
+      const f = o.charCodeAt(0);
+      const _class = (97 <= f && f >= 122) ? 'prime' : 'nonprime';
+      result[_class] = o;
+  }
+  return result;
+}
+
+function prioritizedOrders(numOrders, orderList){
+  const { prime, nonprime } = distinguish(orderList);
+  const heap = new Heap('key');
+  for (const p of prime) {
+      const [id, type, ...rest] = p.split(' ');
+      heap.insert({
+          value: rest,
+          key: type + '_' + id
+      });
+  }
+  const sorted = heap.sort();
+  for (const s in sorted) {
+      const {key, value} = s;
+      console.log(key, value);
+  };
+}
+
+// const rand = (min, max) => ~~(min + (max - min) * Math.random())
+const h = new Heap('k')
+// for (const i of Array.from({length: 50}, () => ({k: rand(0, 100)}))) {
+//   console.log(i)
+//   h.insert(i)
+// }
+h.makeHeap([{k: 'eat_br8'}, {k: 'has_w1'}])
 // h.makeHeap([3, 1, 6, 5, 2, 4])
 // h.makeHeap([{k: 3}, {k: 1}, {k: 6}, {k: 5}, {k: 2}, {k: 4}])
 // const k = h.root()
@@ -121,10 +171,11 @@ function Heap(key, mode = 'min') {
 //   { vtx: 'e', dist: 1000000 }
 // ])
 // console.log(h.array)
-// h.deleteAt(1)
+// h.deleteAt(0)
 // console.log('after delete:', h.array)
 // h.insert(1)
 // console.log(h.array)
 // console.log(h.updateAt(2, 7), h.array)
+console.log(h.sort())
 
 module.exports = Heap

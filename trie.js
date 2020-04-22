@@ -1,3 +1,5 @@
+const Heap = require('./heap')
+
 function Trie() {
   const makeTrieNode = (char, isEnd = false) => ({
     char,
@@ -7,10 +9,23 @@ function Trie() {
 
   this.root = makeTrieNode('')
 
+  const _childBs = (c, node, l, r) => {
+    if (r <= l) return
+
+    // faster Math.floor
+    const mid = l + ~~((r - l) / 2)
+    console.log(mid)
+    const child = node.children[mid]
+
+    if (child.char === c) return child
+    else if(child.char > c)
+      return _childBs(c, node, l, mid - 1)
+    else
+      return _childBs(c, node, mid + 1, r)
+  }
+
   const getChild = (c, node) => {
-    for (const child of node.children) {
-      if (child.char === c) return child
-    }
+    return _childBs(c, node, 0, node.children.length - 1)
   }
 
   this.print = (node = this.root) => {
@@ -49,14 +64,17 @@ function Trie() {
 
   this.insert = word => {
     let currentNode = this.root
+    // const h = new Heap()
     for (const c of word) {
       let child = getChild(c, currentNode)
       if (!child) {
         child = makeTrieNode(c)
+        // h.makeHeap(children)
         currentNode.children.push(child)
       }
       currentNode = child
     }
+
     currentNode.isEnd = true
   }
 
