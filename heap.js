@@ -153,12 +153,16 @@ function prioritizedOrders(numOrders, orderList){
 }
 
 // const rand = (min, max) => ~~(min + (max - min) * Math.random())
-const h = new Heap('k')
+// const h = new Heap('k')
 // for (const i of Array.from({length: 50}, () => ({k: rand(0, 100)}))) {
 //   console.log(i)
 //   h.insert(i)
 // }
-h.makeHeap([{k: 'eat_br8'}, {k: 'has_w1'}])
+// for (const k of ['eat_br8', 'has_w1', 'a_zzz']) {
+//   h.insert({ k })
+// }
+
+// h.makeHeap([{k: 'eat_br8'}, {k: 'has_w1'}, {k: 'a_zzz'}])
 // h.makeHeap([3, 1, 6, 5, 2, 4])
 // h.makeHeap([{k: 3}, {k: 1}, {k: 6}, {k: 5}, {k: 2}, {k: 4}])
 // const k = h.root()
@@ -176,6 +180,6 @@ h.makeHeap([{k: 'eat_br8'}, {k: 'has_w1'}])
 // h.insert(1)
 // console.log(h.array)
 // console.log(h.updateAt(2, 7), h.array)
-console.log(h.sort())
+// console.log(h.sort())
 
 module.exports = Heap

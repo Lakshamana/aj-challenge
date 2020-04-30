@@ -39,7 +39,7 @@ function printPath(prev, s, v) {
   }
 }
 
-function dijkstra(s) {
+function dijkstra(g, s) {
   let dist = {}, prev = {}
   for (const v in g.vertexes()) {
     dist[v] = 1e6
